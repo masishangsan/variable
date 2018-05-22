@@ -2,42 +2,61 @@
     <div id="mine_fun_item_detail">
         <div class="wai_box">
             <div class="back_box">
-                <div class="back" @click="$router.push('/mine_fun')"><span class="iconfont icon-fanhui"></span></div>
+                <div class="back" @click="back"><span class="iconfont icon-fanhui"></span></div>
                 <div>维度</div>
             </div>
             <el-row ><el-col :span="24" style="margin-left: 70px;">概念描述</el-col></el-row>
             <div class="content_box content_box_summarize">
-                <el-row style="margin-bottom: 10px">
-                    <el-col :span="4" >构念名：{{messageInfo.name}}</el-col>
-                    <el-col :span="4" >领域：{{messageInfo.realm}}</el-col>
+                <el-row>
+                    <div class="flex">
+                        <div>构念名：</div>
+                        <div>{{messageInfo.name}}</div>
+                    </div>
+                    <!--<el-col :span="4" >领域：{{messageInfo.realm}}</el-col>-->
                 </el-row>
                 <el-row>
-                    <el-col :span="1">概述：</el-col>
-                    <el-col :span="22" style="margin-left: 18px">{{messageInfo.desc}}</el-col>
+                    <div class="flex">
+                        <div>概述：</div>
+                        <div>{{messageInfo.desc}}</div>
+                    </div>
                 </el-row>
                 <div class="line"></div>
-                <el-row><el-col :span="4" style="margin-bottom: 20px">原始文献</el-col></el-row>
-                <el-row>
-                    <el-col :span="4" style="margin-right: 20px">文章名： 《{{messageInfo.article_name}}》</el-col>
-                    <el-col :span="6" style="margin-right: 20px">作者：{{messageInfo.article_author}}</el-col>
-                    <el-col :span="6" style="margin-right: 20px">索引信息：{{messageInfo.article_message}}</el-col>
+                <el-row><el-col :span="4" style="margin-bottom: 20px;font-size: 14px;font-weight: bold">原始文献</el-col></el-row>
+                <el-row >
+                    <div class="flex">
+                        <div>文章名：</div>
+                        <div>《{{messageInfo.article_name}}》</div>
+                    </div>
                 </el-row>
+                <div style="display: flex;font-size: 14px;margin:10px 0 0 25px">
+                    <div style="min-width: 70px;font-weight: 600">作者：</div>
+                    <div>{{messageInfo.article_author}}</div>
+                </div>
+                <div style="display: flex;font-size: 14px;margin:10px 0 0 25px">
+                    <div style="min-width: 70px;font-weight: 600">索引：</div>
+                    <div>{{messageInfo.article_message}}</div>
+                </div>
+                <div style="display: flex;font-size: 14px;margin:10px 0 0 25px">
+                    <div style="min-width: 70px;font-weight: 600">文献概述：</div>
+                    <div>{{messageInfo.article_content}}</div>
+                </div>
             </div>
             <el-row ><el-col :span="24" style="margin-left: 70px;">维度详情</el-col></el-row>
             <div class="content_box" >
                 <div class="content_box_item">
-                    <el-row><el-col :span="2">维度1</el-col></el-row>
+                    <el-row><el-col :span="24"><span style="font-weight: bold;font-size: 14px">维度名称：</span> {{messageInfo.d_name}}</el-col></el-row>
                     <div class="display">
-                        <div>类型：{{messageInfo.title_type}}</div>
+                        <!--<div> <span style="font-weight: 700;">类型：</span>{{messageInfo.title_type}}</div>-->
                         <!--<el-button plain style="border: 1px solid  #009E79;color: #009E79">导入到我的变量</el-button>-->
                     </div>
+                    <el-row><e-col></e-col><span style="font-weight: 700;font-size: 14px">类型：</span>{{messageInfo.title_type}}</el-row>
                     <div class="topic_box">
                         <el-table
                                 border
                                 :data="messageInfo.topics"
                                 style="width: 100%">
                             <el-table-column
-                                    label="维度"
+                                    label="条目"
                                     width="205">
                                 <template  slot-scope="scope">
                                     条目{{scope.$index+1}}
@@ -45,13 +64,13 @@
                             </el-table-column>
                             <el-table-column
                                     prop="name"
-                                    label="领导关注"
+                                    label="条目名称"
                                     width="935">
                             </el-table-column>
                         </el-table>
                     </div>
                     <div class="display">
-                        <div>量表值</div>
+                        <div style="font-weight: bold;font-size: 14px">量表值</div>
                     </div>
                     <div class="topic_box">
                         <el-table
@@ -66,7 +85,7 @@
                             </el-table-column>
                             <el-table-column
                                     prop="name"
-                                    label="领导关注"
+                                    label="题目名称"
                                     width="935">
                             </el-table-column>
                         </el-table>
@@ -134,7 +153,14 @@
 					}
 					self.messageInfo=res.data
 				})
-			}
+			},
+			back(){
+				if(this.$route.query.dir_name){
+					this.$router.push({path:"/mine_fun_item",query: {id:this.$route.query.dir_id,name:this.$route.query.name}})
+				}else {
+					this.$router.push({path:"/mine_fun_item",query: {type:0,name:this.$route.query.name}})
+				}
+            }
 		}
 	}
 </script>
@@ -201,5 +227,13 @@
     .content_box_item{
         border-bottom: 1px solid #D8D8D8;
         padding: 15px 0;
+    }
+    .flex{
+        display: flex;
+        font-size: 14px;
+    }
+    .flex>div:nth-child(1){
+        font-weight: 600;
+        min-width: 70px;
     }
 </style>

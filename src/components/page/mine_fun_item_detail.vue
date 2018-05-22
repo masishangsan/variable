@@ -2,42 +2,61 @@
     <div id="mine_fun_item_detail">
         <div class="wai_box">
             <div class="back_box">
-                <div class="back" @click="$router.push('/mine_fun')"><span class="iconfont icon-fanhui"></span></div>
+                <div class="back" @click="back"><span class="iconfont icon-fanhui"></span></div>
             </div>
             <el-row ><el-col :span="24" style="margin-left: 70px;">概念描述</el-col></el-row>
             <div class="content_box content_box_summarize">
-                <el-row style="margin-bottom: 10px">
-                    <el-col :span="4" >构念名：{{messageInfo.name}}</el-col>
-                    <el-col :span="4" >领域：{{messageInfo.realm}}</el-col>
-                    <el-col :span="5" >共{{messageInfo.dis.length}}个维度</el-col>
+                <el-row>
+                    <div class="flex">
+                        <div>构念名：</div>
+                        <div>{{messageInfo.name}}</div>
+                    </div>
+                    <el-col :span="4" ></el-col>
+                    <!--<el-col :span="4" >领域：{{messageInfo.realm}}</el-col>-->
+                    <el-col :span="5" ></el-col>
                 </el-row>
                 <el-row>
-                    <el-col :span="1">概述：</el-col>
-                    <el-col :span="22" style="margin-left: 18px">{{messageInfo.desc}}</el-col>
+                    <span style="font-size: 14px;font-weight: 700">共{{messageInfo.dis.length}}个维度</span>
+                </el-row>
+                <el-row>
+                    <div class="flex">
+                        <div>概述：</div>
+                        <div>{{messageInfo.desc}}</div>
+                    </div>
                 </el-row>
                 <div class="line"></div>
-                <el-row><el-col :span="4" style="margin-bottom: 20px">原始文献</el-col></el-row>
-                <el-row>
-                    <el-col :span="4" style="margin-right: 20px">文章名： 《{{messageInfo.article_name}}》</el-col>
-                    <el-col :span="6" style="margin-right: 20px">作者：{{messageInfo.article_author}}</el-col>
-                    <el-col :span="6" style="margin-right: 20px">索引信息：{{messageInfo.article_message}}</el-col>
+                <el-row><el-col :span="4" style="margin-bottom: 20px;font-weight: bold;font-size: 14px">原始文献</el-col></el-row>
+                <el-row >
+                    <div class="flex">
+                        <div>文章名：</div>
+                        <div>《{{messageInfo.article_name}}》</div>
+                    </div>
                 </el-row>
+                <div style="display: flex;font-size: 14px;margin:10px 0 0 25px">
+                    <div style="min-width: 70px;font-weight: 600">作者：</div>
+                    <div>{{messageInfo.article_author}}</div>
+                </div>
+                <div style="display: flex;font-size: 14px;margin:10px 0 0 25px">
+                    <div style="min-width: 70px;font-weight: 600">索引信息：</div>
+                    <div>{{messageInfo.article_message}}</div>
+                </div>
+                <div style="display: flex;font-size: 14px;margin:10px 0 0 25px">
+                    <div style="min-width: 70px;font-weight: 600">文献概述：</div>
+                    <div>{{messageInfo.article_content}}</div>
+                </div>
             </div>
             <el-row ><el-col :span="24" style="margin-left: 70px;">下属维度（共{{messageInfo.dis.length}}个维度）</el-col></el-row>
             <div class="content_box" :class="[zk1?'':'maxhe']">
                 <div v-for="(item,index) in messageInfo.dis" class="content_box_item ">
-                    <el-row><el-col :span="2">维度{{index+1}}</el-col></el-row>
-                    <div class="display">
-                        <div>类型：{{messageInfo.title_type}}</div>
-                        <!--<el-button plain style="border: 1px solid  #009E79;color: #009E79">导入到我的变量</el-button>-->
-                    </div>
+                    <el-row><el-col :span="8"> <span style="font-weight: bold">维度{{index+1}}</span>： {{item.name}}</el-col></el-row>
+                    <el-row><el-col :span="8"><span> <span style="font-weight: bold">类型：</span>{{messageInfo.title_type}}</span></el-col></el-row>
                     <div class="topic_box">
                         <el-table
                                 border
                                 :data="item.topics"
                                 style="width: 100%">
                             <el-table-column
-                                    label="维度"
+                                    label="条目"
                                     width="205">
                                 <template  slot-scope="scope">
                                     条目{{scope.$index+1}}
@@ -45,13 +64,13 @@
                             </el-table-column>
                             <el-table-column
                                     prop="name"
-                                    label="领导关注"
+                                    label="条目内容"
                                     width="935">
                             </el-table-column>
                         </el-table>
                     </div>
                     <div class="display">
-                        <div>量表值</div>
+                        <div style="font-weight: bold;font-size: 14px">量表值</div>
                     </div>
                     <div class="topic_box">
                         <el-table
@@ -66,7 +85,7 @@
                             </el-table-column>
                             <el-table-column
                                     prop="name"
-                                    label="领导关注"
+                                    label="题目名称"
                                     width="935">
                             </el-table-column>
                         </el-table>
@@ -93,36 +112,49 @@
                     </div>
                     <div class="mouldbox">
                         <div class="mouldbox_tit">
-                            <span :span="4">文章名：《{{mould.article_name}}》</span>
-                            <span :span="6" style="margin: 0 30px">作者：{{mould.article_author}}</span>
-                            <span :span="6">索引信息{{mould.article_message}}</span>
+                            <div class="flex">
+                                <div>文章名：</div>
+                                <div>《{{mould.article_name}}》</div>
+                            </div>
+                        </div>
+                        <div class="mouldbox_tit">
+                            <div class="flex">
+                                <div>作者：</div>
+                                <div>《{{mould.article_author}}》</div>
+                            </div>
+                        </div>
+                        <div style="display: flex;font-size: 14px">
+                            <div style="min-width: 70px;font-weight: 600">索引信息：</div>
+                            <div>{{mould.article_message}}</div>
                         </div>
                         <div class="sheji">
-                            <div>涉及变量：</div>
-                            <div v-for="(blname,index) in mould.var" style="color:#009E79;">
+                            <div style="font-weight: 700;font-size: 14px;min-width: 70px">涉及变量：</div>
+                            <div style="text-align: left">
+                                <div v-for="(blname,index) in mould.var" style="color:#009E79;display: inline">
                                 <span>
                                     {{blname.name}}（<span v-for="(blname_item,index) in blname.dis">{{blname_item.name}}<span v-if="index!=blname.dis.length-1">，</span></span>）<span v-if="index!=mould.var.length-1">，</span>
                                 </span>
+                                </div>
                             </div>
                         </div>
                         <div class="guanxi">
-                            <div>变量关系：</div>
-                            <div v-for="(relation,index)  in mould.rea">
-                                <span>{{relation.z_bl}}</span>
-                                <span v-if="relation.is_adjus==1">（{{relation.adjust}}）</span>
-                                <span v-if="relation.is_adjus==0">（无调节）</span>
-                                <span class="iconfont icon-jia2" v-if="relation.is_add==1"></span>
-                                <span class="iconfont icon-jian1" v-else="relation.is_add==0"></span>
-                                <span class="iconfont icon-jiantouarrow484"></span>
-                                <span>{{relation.y_bl}}</span><span  v-if="index!=mould.rea.length-1">，</span>
+                            <div style="font-weight: 700;font-size: 14px;min-width: 70px">变量关系：</div>
+                            <div style="text-align: left">
+                                <div v-for="(relation,index)  in mould.rea" style="display: inline;">
+                                    <span>{{relation.z_bl}}</span>
+                                    <span v-if="relation.is_adjus==1">（{{relation.adjust}}）</span>
+                                    <span v-if="relation.is_adjus==0">（无调节）</span>
+                                    <span class="iconfont icon-jia2" v-if="relation.is_add==1"></span>
+                                    <span class="iconfont icon-jian1" v-else="relation.is_add==0"></span>
+                                    <span class="iconfont icon-jiantouarrow484"></span>
+                                    <span>{{relation.y_bl}}</span><span  v-if="index!=mould.rea.length-1">，</span>
+                                </div>
                             </div>
                         </div>
                         <div class="mouldbox_bot_box">
-                            <div class="mouldbox_left">
-                                <el-row style="padding: 0">
-                                    <el-col :span="2">概述：</el-col>
-                                    <el-col :span="20" style="margin-left: 18px">{{mould.article_content}}</el-col>
-                                </el-row>
+                            <div style="display: flex;font-size: 14px">
+                                <div style="min-width: 70px;font-weight: 600">构念概述：</div>
+                                <div>{{mould.article_content}}</div>
                             </div>
                             <div class="mouldbox_right">
                                 <div class="img" :style="{backgroundImage: 'url(' +mould.img+ ')'}"></div>
@@ -288,17 +320,33 @@
                 var self=this
                 self.$axios.get('getmine_fun_item_detail',{id:id},(res)=>{
                 	console.log(res)
-                    if(res.realm==1){
-	                    res.realm=="量表"
-                    }else if(res.realm==2){
-	                    res.realm=="多选"
-                    }else if (res.realm==3){
-	                    item.title_type="单选"
-                    }
+	                if(res.data.title_type==1){
+		                res.data.title_type="量表"
+	                }else if(res.data.title_type==2){
+		                res.data.title_type="多选"
+	                }else if(res.data.title_type==3){
+		                res.data.title_type="单选"
+	                }
                     self.messageInfo=res.data
                     // console.log(self.messageInfo.dis[0])
                 })
             },
+            back(){
+		        // if (this.$route.query.type==4){
+		        // 	if(this.$route.query.dir_id){
+				 //        this.$router.push({path:"/mine_fun_item",query: {id:this.$route.query.dir_id}})
+                //
+			     //    }else {
+				 //        this.$router.push({path:"/mine_fun_item",query: {type:0}})
+                //
+			     //    }
+		        // }
+                if(this.$route.query.dir_name){
+	                this.$router.push({path:"/mine_fun_item",query: {id:this.$route.query.dir_id,name:this.$route.query.name}})
+                }else {
+	                this.$router.push({path:"/mine_fun_item",query: {type:0,name:this.$route.query.name}})
+                }
+            }
         }
 	}
 </script>
@@ -397,7 +445,7 @@
     }
     .sheji,.guanxi{
         display: flex;
-        flex-wrap: wrap;
+        /*flex-wrap: wrap;*/
         font-family: PingFang-SC-Medium;
         font-size: 14px;
         color: #343434;
@@ -426,10 +474,24 @@
         background: url("http://oxn1gy8g5.bkt.clouddn.com/IMG_1001.JPG");
         background-repeat: no-repeat;
         background-position: center;
-        background-size: cover;
+        background-size: contain;
     }
     .mouldbox_bot_box{
         display: flex;
+        justify-content: space-between;
     }
-
+    .mouldbox_bot_box>div:nth-child(1){
+        flex: 6;
+    }
+    .mouldbox_bot_box>div:nth-child(2){
+        flex: 4;
+    }
+    .flex{
+        display: flex;
+        font-size: 14px;
+    }
+    .flex>div:nth-child(1){
+        font-weight: 600;
+        min-width: 70px;
+    }
 </style>

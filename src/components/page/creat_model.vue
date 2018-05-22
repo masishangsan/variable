@@ -45,7 +45,7 @@
                         <el-row>
                             <el-col :span="22" >
                                 <div class="iis">
-                                    <el-form-item label="描述" required>
+                                    <el-form-item label="描述" >
                                         <el-input type="textarea" v-model="form.article_content" resize="none" :rows="5" require></el-input>
                                     </el-form-item>
                                 </div>
@@ -76,7 +76,7 @@
                                         </el-select>
                                     </el-form-item>
                                 </el-col>
-                                <el-col :span="6">
+                                <el-col :span="8">
                                     <el-form-item >
                                         <el-select class="tags"
                                                    @change="tagsChange(index)"
@@ -95,7 +95,8 @@
                                     </el-form-item>
                                 </el-col>
                                 <el-col :span="6" style="margin-left: 60px">
-                                    <span class="iconfont icon-chazishanchudaibiankuang option_tiao" @click="de_fun(index)" v-if="index>1"></span>
+                                    <div class="add_topic"  @click="de_fun(index)" v-if="index>1" style="height: 30px;width: 100px;line-height: 30px">删除关系</div>
+                                    <!--<span class="iconfont icon-chazishanchudaibiankuang option_tiao" @click="de_fun(index)" v-if="index>1"></span>-->
                                 </el-col>
                             </el-row>
                         </div>
@@ -103,7 +104,7 @@
                         <!--<span class="iconfont icon-jia jia" ></span>-->
                         <!--添加变量-->
                         <!--</el-button></el-col></el-row>-->
-                        <div class="add_topic" @click="add_fun">
+                        <div class="add_topic" @click="add_fun" >
                             <img src="../../../static/img/lv_+@4x.png" alt="">
                             添加变量
                         </div>
@@ -158,9 +159,19 @@
                                     </el-select>
                                 </el-col>
                                 <el-col :span="3" v-if="item1.is_adjust==1">
-                                    <el-input v-model="item1.adjust"  placeholder="调节变量"></el-input>
+                                    <el-select v-model="item1.adjust" placeholder="调节变量" @change="Tchange(item1)" filterable>
+                                        <el-option
+                                            v-for="tj in tiaoArray"
+                                            :key="tj.name"
+                                            :label="tj.name"
+                                            :value="tj.name">
+                                        </el-option>
+                                    </el-select>
+                                    <!--<el-input v-model="item1.adjust"  placeholder="调节变量"></el-input>-->
                                 </el-col>
-                                <el-col :span="2" v-if="index1>0"><span class="iconfont icon-chazishanchudaibiankuang option_tiao" @click="de_logic(index1)"></span></el-col>
+
+                                <!--<el-col :span="2" v-if="index1>0"><span class="iconfont icon-chazishanchudaibiankuang option_tiao" @click="de_logic(index1)"></span></el-col>-->
+                                <el-col :span="2" v-if="index1>0"><div class="add_topic" style="height: 30px;width: 100px;line-height: 30px;margin-top: 5px" @click="de_logic(index1)">删除逻辑</div></el-col>
                             </el-row>
                         </div>
                         <!--<el-row><el-col> <el-button plain size="small" style="margin-left: 76px;margin-top: 20px;width: 153px;border-color:rgba(26, 179, 148, 1);color: rgba(26, 179, 148, 1)" @click="add_logic">-->
@@ -172,7 +183,7 @@
                             添加逻辑
                         </div>
                         <el-row style="margin-top: 10px"><el-col :span="24"><div class="line"></div></el-col></el-row>
-                        <el-row><el-col :span="24" style="font-size: 14px">添加图片</el-col></el-row>
+                        <el-row><el-col :span="24" style="font-size: 14px">添加图片（支持JPG,PNG格式图片）</el-col></el-row>
                         <el-upload
                                 class="avatar-uploader"
                                 action="http://39.104.56.226/index/mould/upload"
@@ -255,12 +266,16 @@
                 Zluoji:[],
 				Yluoji:[],
 				YluojiIds: [],
-                handArray:[]
+                handArray:[],
+                tiaoArray:[],
+                wonderArray:[],
+                is_admin:""
 			}
 		},
 		mounted(){
 
 			var id=this.$route.query.id;
+			this.is_admin=localStorage.getItem('is_admin')
             // console.log(id)
             if (id){
 				this.get_model_fan(id);
@@ -317,12 +332,44 @@
 	                        item2.disabled=true
                         }
 	                })
+	                var arr=[]
+	                self.Zluoji=[];
+	                self.Yluoji=[];
+	                self.tiaoArray=[];
+	                self.form.variable.forEach(function (item) {
+		                if(item.var_id!=''){
+			                arr.push(item.var_id)
+		                }
+	                })
+	                arr.forEach(function (item) {
+		                // debugger;
+		                self.bloption.forEach(function (item1) {
+			                if(item1.id==item){
+				                // self.luoji.push({id:item1.id,name:item1.name,disabled:false})
+				                self.Zluoji.push({id:item1.id,name:item1.name,disabled:false})
+				                self.Yluoji.push({id:item1.id,name:item1.name,disabled:false})
+				                self.tiaoArray.push({id:item1.id,name:item1.name,disabled:false})
+				                self.Zluoji.forEach((val)=>{
+					                val['len'] = (self.Zluoji.length - 1);
+				                })
+				                self.Yluoji.forEach((val)=>{
+					                val['len'] = (self.Yluoji.length - 1);
+				                })
+				                self.tiaoArray.forEach((val)=>{
+					                val['len'] = (self.tiaoArray.length - 1);
+				                })
+				                // self.luoji.forEach(function (item2) {
+				                //    item2.disabled=false
+				                // })
+			                }
+		                })
+	                })
                     // console.log(self.form.variable,'753965654164165')
                 })
             },
 			Zchange(row){
 
-				// console.log(row);
+				console.log(row);
                 var self = this;
                 self.Zluoji.forEach((item, index)=>{
 					if (item.id == row.z_bl) {
@@ -335,7 +382,12 @@
 						self.luoji[index].len = item.len - 1;
 					}
 				})
-
+                self.form.relation.forEach(val=>{
+                	if(val.z_bl==val.y_bl){
+		                this.$message.error('该因变量不可选');
+		                val.z_bl=""
+                    }
+                })
 
 
 				// var ZIds = [];
@@ -377,11 +429,11 @@
 
 	                // self.wdoptions.push({name:"全部变量",id:0})
                 });
-
                 this.handleChange()
                 var arr=[]
                 self.Zluoji=[];
                 self.Yluoji=[];
+				self.tiaoArray=[];
                 self.form.variable.forEach(function (item) {
                 	if(item.var_id!=''){
 		                arr.push(item.var_id)
@@ -393,12 +445,15 @@
                         	// self.luoji.push({id:item1.id,name:item1.name,disabled:false})
 	                        self.Zluoji.push({id:item1.id,name:item1.name,disabled:false})
 	                        self.Yluoji.push({id:item1.id,name:item1.name,disabled:false})
-
+	                        self.tiaoArray.push({id:item1.id,name:item1.name,disabled:false})
 	                        self.Zluoji.forEach((val)=>{
 	                        	val['len'] = (self.Zluoji.length - 1);
                             })
 	                        self.Yluoji.forEach((val)=>{
 		                        val['len'] = (self.Yluoji.length - 1);
+	                        })
+	                        self.tiaoArray.forEach((val)=>{
+		                        val['len'] = (self.tiaoArray.length - 1);
 	                        })
 	                        // self.luoji.forEach(function (item2) {
                              //    item2.disabled=false
@@ -444,13 +499,14 @@
 	                self.$axios.post('terrace_model_update',this.form,(res)=>{
 		                if (res.ret) {
 			                this.$message.success('编辑成功，正在跳转...');
-			                setTimeout(function () {self.$router.push({path: '/terrace'})}, 1000)
+			                setTimeout(function () {self.$router.push({path: '/mine_model'})}, 1000)
 		                }else {
 			                this.$message.error(res.msg)
                         }
 	                })
                 }else {
 	                var self=this;
+	                console.log(self.form.relation.sort(),'排序后数组')
 	                // self.form.variable.forEach(function (item) {
                      //    if(item.var_id==""||item.dis_id==[]){
 	                //         self.$message({
@@ -505,17 +561,28 @@
 	                self.form.article_name=res.data.article_name;
                     self.form.article_author=res.data.article_author.split(',')
 	                self.form.img=res.data.img
-                    res.data.var.forEach(function (item) {
+                    res.data.var.forEach(function (item,index) {
 	                    item.dis_id = [];
-	                    item.dis.forEach(function (item1) {
-		                    item.dis_id.push(item1.id);
-	                    })
+	                    if(item.dis){
+		                    item.dis.forEach(function (item1) {
+			                    item.dis_id.push(item1.id);
+		                    })
+                        }else {
+	                    	item.dis_id[index]=0
+                        }
+
                         item.var_id=item.id
-                        self.blchangeval(item.var_id);
+	                    self.$axios.get('getwd_Bybl',{id:item.var_id},(res)=>{
+		                    res.data.push({name:"全部维度",id:0})
+
+		                    self.$set(self.wdoptions,index, res.data)
+
+	                    });
                     })
-                    console.log( res.data.var);
+                    // console.log( res.data.var);
 	                self.form.variable=res.data.var;
 	                self.form.relation=res.data.rea;
+	                this.handleChange()
 
 	                self.getblMsg();
                 })
@@ -547,7 +614,12 @@
 							type: 'success',
 							message: '取消成功!'
 						});
-						this.$router.push({path:'/terrace_search_model',query:{key_words:""}})
+						if(this.is_admin==0){
+							console.log('开始觉得回复可见大法官立刻搭街坊个')
+							this.$router.push({path:'/mine_model',query:{key_words:""}})
+                        }else if(this.is_admin==1){
+							this.$router.push({path:'/terrace_search_model',query:{key_words:""}})
+                        }
 					}).catch(() => {
 						this.$message({
 							type: 'info',
@@ -564,7 +636,11 @@
 							type: 'success',
 							message: '取消成功!'
 						});
-						this.$router.push({path:'/mine_model'})
+						if(this.is_admin==0){
+							this.$router.push({path:'/mine_model',query:{key_words:""}})
+						}else if(this.is_admin==1){
+							this.$router.push({path:'/terrace_search_model',query:{key_words:""}})
+						}
 					}).catch(() => {
 						this.$message({
 							type: 'info',
@@ -572,6 +648,9 @@
 						});
 					});
                 }
+
+            },
+			Tchange(row){
 
             }
 		}
@@ -727,6 +806,10 @@
         color: #009E79;
         letter-spacing: 0;
     }
+    .nv_btn_2:hover{
+        color: #00C597;
+        border-color: #00C597;
+    }
     .add_topic{
         background: #FFFFFF;
         border: 1px solid #009E79;
@@ -740,6 +823,10 @@
         line-height: 40px;
         margin-left: 80px;
         cursor: pointer;
+    }
+    .add_topic:hover{
+        color: #00C597;
+        border-color: #00C597;
     }
     .add_topic img{
         display: inline-block;

@@ -3,12 +3,26 @@
         <div class="wai_box">
             <div class="creat_fun">
                 <div class="head">
-                    <div class="tit">共{{xiangmu.length}}个项目</div>
-                    <div class="nc_btn" @click="dialogFormVisible = true"><span>+</span><span>新建文件夹</span></div>
+                    <div class="tit">共{{xiangmu.length}}个文件夹</div>
+                    <div style="display: flex;align-items: center">
+                        <div class="creat_funs"  @click="$router.push({path:'/creat_fun'})"><span>+</span><span>新建变量</span></div>
+                        <div class="nc_btn" @click="dialogFormVisible = true"><span>+</span><span>新建文件夹</span></div>
+                    </div>
                     <!--<el-button type="primary" style="border: 1px solid rgba(255, 255, 255, 1);background-color:rgba(26, 179, 148, 1);"  @click="dialogFormVisible = true">新建文件夹</el-button>-->
                 </div>
                 <div class="item_box">
+                    <div class="item"  @click="tomine_All_fun_item">
+                        <div class="item_left">
+                            <div >全部变量</div>
+                            <div>共{{allNum}}个变量</div>
+                        </div>
+                        <div class="item_right">
+                            <span class="iconfont icon-more gd"></span>
+                        </div>
+                    </div>
                     <div class="item" v-for="(item,index) in xiangmu" v-model="xiangmu" @click="tomine_fun_item(index)">
+                        <span class="iconfont icon-bianji bianji" @click.stop="bianji(index)"></span>
+                        <span class="iconfont icon-shanchu shanchu" @click.stop="shanchu(index)"></span>
                         <div class="item_left">
                             <div>{{item.name}}</div>
                             <div>共{{item.num}}个变量</div>
@@ -39,20 +53,18 @@
 		data(){
 			return{
 				xiangmu:[
-                    // {
-	                 //    num:"",
-	                 //    name:"",
-                    //     id:""
-                    // }
                 ],
 				form:{
                     name:"",
                 },
-				dialogFormVisible:false
+				dialogFormVisible:false,
+                samedir:true,
+                allNum:""
             }
         },
         mounted(){
             this.getIndexMessage();
+            this.getAllNumber();
         },
         methods:{
 	        add_file(){
@@ -87,10 +99,78 @@
                     }
                 })
             },
+            getAllNumber(){
+	            this.$axios.get('getAllNumbers',{},res=>{
+	            	if(res.ret){
+                    this.allNum=res.data.num
+                    }
+                })
+            },
 	        tomine_fun_item(index){
 	        	console.log(index)
                 var id=this.xiangmu[index].id
-                this.$router.push({path:"/mine_fun_item", query: { id: id }})
+                this.$router.push({path:"/mine_fun_item", query: { id: id ,name:this.xiangmu[index].name}})
+            },
+	        bianji(index){
+	        	var self=this
+	        	var id=this.xiangmu[index].id;
+		        self.samedir=true;
+		        this.$prompt('请输入新文件夹名', '提示', {
+			        confirmButtonText: '确定',
+			        cancelButtonText: '取消',
+			        inputPattern: /\S/,
+			        inputErrorMessage: '请输入内容'
+		        }).then(({ value }) => {
+		        	self.xiangmu.forEach(item=>{
+		        		if(value==item.name){
+					        this.$message({
+						        type: 'error',
+						        message: '您已经有同名文件夹了'
+					        });
+					        self.samedir=false
+                        }
+                    })
+                    if(self.samedir){
+		        		self.$axios.post('update_file',{name:value,id:id},res=>{
+		        			if (res.ret){
+		        				self.$message.success('修改成功');
+						        this.getIndexMessage();
+                            }
+                        })
+                    }
+		        }).catch(() => {
+			        this.$message({
+				        type: 'info',
+				        message: '取消输入'
+			        });
+		        });
+            },
+	        shanchu(index){
+		        var id=this.xiangmu[index].id;
+		        var self=this
+		        this.$confirm('此操作将永久删除该文件夹, 是否继续?', '提示', {
+			        confirmButtonText: '确定',
+			        cancelButtonText: '取消',
+			        type: 'warning'
+		        }).then(() => {
+			        self.$axios.post('deldir_list',{id:id},res=>{
+			        	if(res.ret){
+					        this.$message({
+						        type: 'success',
+						        message: '删除成功!'
+					        });
+					        this.getIndexMessage();
+                        }
+                    })
+		        }).catch(() => {
+			        this.$message({
+				        type: 'info',
+				        message: '已取消删除'
+			        });
+		        });
+            },
+	        tomine_All_fun_item(){
+		        this.$router.push({path:"/mine_fun_item", query: { type: 0 ,name:'全部'}})
             }
         }
 	}
@@ -123,6 +203,7 @@
         color: #737373;
         letter-spacing: 0;
         line-height: 26px;
+        margin-left: 27px;
     }
     .item_box{
         padding: 15px 20px 0;
@@ -136,10 +217,29 @@
         min-height: 60px;
         padding: 15px 27px;
         margin-bottom: 20px;
+        position: relative;
+    }
+    .bianji{
+        position: absolute;
+        left: 130px;
+        top: 3px;
+        cursor: pointer;
+    }
+    .bianji:hover{
+        color: #00a580;
+    }
+    .shanchu{
+        position: absolute;
+        left: 160px;
+        top: 3px;
+        cursor: pointer;
     }
     .item:hover{
         border: 1px solid rgba(26, 179, 148, 1);
         cursor: pointer;
+    }
+    .shanchu:hover{
+        color: #00a580;
     }
     .item_left{
         display: flex;
@@ -171,5 +271,22 @@
     .nc_btn>span:nth-child(1){
         font-size: 20px;
         margin-right: 5px;
+    }
+    .creat_funs{
+        width: 140px;
+        height: 40px;
+        line-height: 40px;
+        margin-right: 40px;
+        text-align: center;
+        border: 1px solid #009E79;
+        border-radius: 6px;
+        font-size: 18px;
+        color: #009E79;
+        letter-spacing: 0;
+        cursor: pointer;
+    }
+    .creat_funs:hover{
+        color: #00C597;
+        border-color: #00C597;
     }
 </style>

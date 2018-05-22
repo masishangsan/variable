@@ -8,15 +8,15 @@
                     </div>
                     <div class="nei_box_right">
                         <el-row style="align-items: center;display: flex">
-                            <el-col :span="1" style="margin-right: 20px">X=</el-col>
+                            <el-col :span="2" style="margin-right: 20px">X=</el-col>
                             <el-col :span="12"><el-input v-model="form.X"></el-input></el-col>
                         </el-row>
                         <el-row style="align-items: center;display: flex;margin-top: 10px">
-                            <el-col :span="1" style="margin-right: 20px">M=</el-col>
+                            <el-col :span="2" style="margin-right: 20px">M=</el-col>
                             <el-col :span="12"><el-input v-model="form.M"></el-input></el-col>
                         </el-row>
                         <el-row style="align-items: center;display: flex;margin-top: 10px">
-                            <el-col :span="1" style="margin-right: 20px">Y=</el-col>
+                            <el-col :span="2" style="margin-right: 20px">Y=</el-col>
                             <el-col :span="12"><el-input v-model="form.Y"></el-input></el-col>
                         </el-row>
                         <div class="tip" v-if="form.X==''&&form.Y==''&&form.M==''">请至少输入一个变量</div>
@@ -31,12 +31,12 @@
                     <el-checkbox label="3" name="type">X<span class="iconfont icon-jiantouarrow484"></span>Y</el-checkbox>
                 </el-checkbox-group>
             </div>
-            <div class="nc_btn" @click="search">搜索</div>
+            <div class="nc_btn" @click="search">探索</div>
         </div>
         <div class="wai_box" v-if="tableData.length>0">
-            <el-row style="padding: 10px 72px"><el-col :span="4">搜索结果</el-col></el-row>
+            <el-row style="padding: 10px 72px"><el-col :span="4">探索结果</el-col></el-row>
             <div class="content_box">
-                <div class="jieguo"><span>共搜索到{{tiao}}个潜在结果</span></div>
+                <div class="jieguo"><span>共探索到{{tiao}}个潜在结果</span></div>
                 <div v-for="(item,index) in tableData" style="border-bottom: 1px solid #d8d8d8;padding: 20px 0">
                     <div class="tit">
                         <div><span>X:</span><span>{{tableData[index].rea[0]}}</span></div>
@@ -47,7 +47,8 @@
                         <div>X<img src="../../../static/img/black_jiantou@4x.png" alt="" style="width: 14px; height: 11px;margin: 0 5px">M</div>
                         <div class="dBox">
                             <div class="linesOne" v-for="(one,index1) in item.ones" v-show="one.isShow">
-                                <div class="name">
+                                <div class="name" style="overflow: hidden;text-overflow: ellipsis;white-space: nowrap;">
+                                    <span style="font-weight: bold">文章名称：</span>
                                     <a :href="baseURL+'#/terrace_model_detail?id='+tableData[index].ones[index1].id+'&&type=1'" style="color: #252525"  @click="tode_X(index,index1)" target="_Blank">《{{one.article_name}}》</a>
                                     <!--<span style="cursor: pointer">《{{one.article_name}}》</span>-->
                                     <span v-if="index1==0"  @click="visibleToggle(index, item.ones)">
@@ -56,9 +57,9 @@
                                         <span v-if="one.select" @click="tableData[index].ones[index1].select=false"><img src="../../../static/img/up@2x.png" alt="" style="width: 10px;height: 10px"></span>
                                     </span>
                                 </div>
-                                <div class="msg">{{one.article_message}}</div>
+                                <div class="msg"> <span style="font-weight: bold">索引信息：</span> {{one.article_message}}</div>
                                 <div class="bian">
-                                    <span>涉及变量（{{one.num}}个）：</span>
+                                    <span style="font-weight: bold">涉及变量（{{one.num}}个）：</span>
                                     <span>{{one.var_name}}</span>
                                 </div>
                             </div>
@@ -70,6 +71,7 @@
                         <div class="dBox">
                             <div class="linesOne" v-for="(two,index1) in item.twos" v-show="two.isShow">
                                 <div class="name" >
+                                    <span style="font-weight: bold">文章名称：</span>
                                     <a :href="baseURL+'#/terrace_model_detail?id='+tableData[index].twos[index1].id+'&&type=1'" style="color: #252525"  @click="tode_Y(index,index1)" target="_Blank">《{{two.article_name}}》</a>
                                     <!--<span style="cursor: pointer" @click="tode_Y(index,index1)">《{{two.article_name}}》</span>-->
                                     <span v-if="index1==0" @click="visibleToggle(index, item.twos)">
@@ -78,9 +80,9 @@
                                         <span v-if="two.select" @click="tableData[index].twos[index1].select=false"><img src="../../../static/img/up@2x.png" alt="" style="width: 10px;height: 10px"></span>
                                     </span>
                                 </div>
-                                <div class="msg">{{two.article_message}}</div>
+                                <div class="msg"><span style="font-weight: bold">索引信息：</span>{{two.article_message}}</div>
                                 <div class="bian">
-                                    <span>涉及变量（{{two.num}}个）：</span>
+                                    <span style="font-weight: bold">涉及变量（{{two.num}}个）：</span>
                                     <span>{{two.var_name}}</span>
                                 </div>
                             </div>
@@ -92,6 +94,7 @@
                         <div class="dBox">
                             <div class="linesOne" v-for="(three,index1) in item.threes" v-show="three.isShow">
                                 <div class="name" >
+                                    <span style="font-weight: bold">文章名称：</span>
                                     <a :href="baseURL+'#/terrace_model_detail?id='+tableData[index].threes[index1].id+'&&type=1'" style="color: #252525"  @click="tode_M(index,index1)" target="_Blank">《{{three.article_name}}》</a>
                                     <!--<span style="cursor: pointer" @click="tode_M(index,index1)">《{{three.article_name}}》</span>-->
                                     <span v-if="index1==0" @click="visibleToggle(index, item.threes)">
@@ -100,9 +103,9 @@
                                         <span v-if="three.select" @click="tableData[index].threes[index1].select=false"><img src="../../../static/img/up@2x.png" alt="" style="width: 10px;height: 10px"></span>
                                     </span>
                                 </div>
-                                <div class="msg">{{three.article_message}}</div>
+                                <div class="msg"><span style="font-weight: bold">索引信息：</span>{{three.article_message}}</div>
                                 <div class="bian">
-                                    <span>涉及变量（{{three.num}}个）：</span>
+                                    <span style="font-weight: bold">涉及变量（{{three.num}}个）：</span>
                                     <span>{{three.var_name}}</span>
                                 </div>
                             </div>
@@ -228,6 +231,7 @@
 				        self.pages=res.msg/10;
 				        self.noneX=true
 				        self.tiao=res.msg
+                        console.log(res.data);
 				        res.data.forEach(function (item) {
 					        item.ones.forEach(function (item1) {
 						        item1.isShow=true
@@ -356,19 +360,24 @@
     .oneBox .dBox .linesOne:nth-child(2) .msg,.oneBox .dBox .linesOne:nth-child(3) .msg,.twoBox .dBox .linesOne:nth-child(2) .msg,.threeBox .dBox .linesOne:nth-child(3) .msg{
         /*margin-left: 146px;*/
     }
+    .dBox{
+        width: 100%;
+    }
     .linesOne{
         display: flex;
+        justify-content: space-around;
     }
     .name,.msg{
         /*margin: 0 40px;*/
     }
     .name{
-        width: 180px;
+        width: 220px;
         margin-left: 20px;
+        flex: 1;
     }
     .msg{
-        margin-left: 120px;
-        margin-right: 100px;
+        /*margin-left: 120px;*/
+        /*margin-right: 100px;*/
         width: 281px;
         line-height: 20px;
         color: rgba(16, 16, 16, 1);
@@ -376,9 +385,15 @@
         text-align: left;
         font-family: Roboto;
         /*margin: 0 60px!important;*/
+        flex: 1;
     }
-    .dBox{
-
+    .bian{
+        font-size: 14px;
+        flex: 1;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        max-width: 371px;
     }
     .fenye{
         padding: 15px 0 0;
@@ -389,5 +404,14 @@
         justify-content: space-between;
         padding: 10px 55px;
         align-items: center;
+    }
+    .oneBox>div:nth-child(1),.twoBox>div:nth-child(1),.threeBox>div:nth-child(1){
+        min-width: 50px;
+    }
+    .name,.msg{
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        font-size: 14px;
     }
 </style>

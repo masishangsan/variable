@@ -3,9 +3,9 @@
         <div class="head">
             <div class="head_left display">
                 <div class="logo" @click="roots" style="cursor: pointer"><img src="../../../static/img/logo3.png" alt=""></div>
-                <el-menu mode="horizontal" active-text-color="#009688" router default-active="terrace" index="science">
-                    <el-menu-item index="science">学术搜索</el-menu-item>
-                    <el-menu-item index="terrace">平台变量库</el-menu-item>
+                <el-menu mode="horizontal" active-text-color="#009688" router :default-active="$route.meta.menu" index="science">
+                    <el-menu-item index="science">模型探索</el-menu-item>
+                    <el-menu-item index="terrace">平台数据库</el-menu-item>
                     <el-menu-item index="mine_fun">我的变量库</el-menu-item>
                     <el-menu-item index="mine_model">我的模型库</el-menu-item>
                     <!--<el-menu-item index="creat_model">创建模型</el-menu-item>-->
@@ -44,6 +44,7 @@
         },
         mounted(){
 			this.username=localStorage.getItem('name')
+
         },
         methods:{
 	        tuis(){

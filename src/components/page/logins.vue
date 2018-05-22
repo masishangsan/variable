@@ -23,7 +23,7 @@
                         </div>
                         <div class="inp_box">
                             <img src="../../../static/img/mima@3x.png" alt="" style="width: 16px;height: 21px">
-                            <input type="email" placeholder="登陆密码"  v-model="form_L.passward" style="width: 80%" :type="this.form_Z.pwdType">
+                            <input type="" placeholder="登陆密码"  v-model="form_L.passward" style="width: 80%" :type="this.form_Z.pwdType" @keyup.enter="loginTo">
                             <img :src="this.form_Z.src" alt="" style="width: 22px;height: 19px;cursor: pointer" @click="changeType">
                         </div>
                         <div class="btn" @click="loginTo">立即登陆</div>
@@ -55,7 +55,7 @@
                         <div class="btn" @click="save">立即注册</div>
                         <el-checkbox  name="type" v-model="isDisabled"><span class="xieyi">我已阅读并同意 <span>《SURVEY BOX用户协议》</span></span></el-checkbox>
                     </div>
-                    <div class="bei"><p>Copyright © 2018 SURVEY BOX 北京思维盒科技有限公司 京ICP备 12000008</p></div>
+                    <div class="bei"><p>Copyright © 2018 SURVEY BOX 北京研之道科技有限公司 京ICP备 12000008</p></div>
                 </div>
             </div>
             <div class="right"></div>
@@ -156,6 +156,7 @@
                 }
             },
 	        loginTo(){
+	        	console.log('aa')
 	        	var self=this
 	        	if (self.form_L.email==""){
 	        		self.msgL="请填写邮箱"
@@ -177,6 +178,9 @@
 		        		self.msgL=res.msg
                     }
                 })
+            },
+            logs(){
+	        	console.log('aaa')
             }
         }
 	}

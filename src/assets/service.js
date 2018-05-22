@@ -9,13 +9,15 @@ export default{
 
 	add_model:"/index/mould/add",//新增模型
 
+	deleteModel:"/index/mould/delete",//我的模型库删除模型
+
 	getblMsg:"/index/variable/getvarname",//获取变量选项值
 
 	getwd_Bybl:"/index/variable/getdisname",//通过变量获取维度值
 
 	add_file:"/index/dir/add",//新建文件夹
 
-
+	update_file:"/index/dir/update",//修改文件夹名
 
 	getpingtai_fun:"/index/dir/index",//获取个人变量库信息
 
@@ -63,7 +65,28 @@ export default{
 
 	getdir_list:"/index/dir/get",//获取文件夹列表
 
+	getdirlist:"/index/dir/getdirlist",//获取文件夹列表2
+
+	deldir_list:'/index/dir/delete',//删除文件夹
+
+	getAll_fun:"/index/dir/getuservar",//获取所有变量
+
+	moveDir:"/index/dir/mobile",//移动变量到新的文件夹
+
+	addvar:"/index/dir/addvar",//从所有文件夹移动到新的文件夹
+
+	copyDir:"/index/dir/copy",//复制变量到新的文件夹
+
+	user_fun_update:"/index/variable/update",//用户编辑
+
 	getzong:"/index/mould/num",//获取平台总数量
+
+	model_isupdate:"/index/mould/isupdate ",//查询是否有权编辑模型
+
+	fun_isupdate:"/index/variable/isupdate ",//查询是否有权编辑变量
+
+	getAllNumbers:"/index/dir/countuservar",//获取全部文件夹变量数量
+
 	// qiniu
     qiniu: "/api/tools/getToken",
 }

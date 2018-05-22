@@ -2,16 +2,16 @@
     <div id="terrace_search">
         <div class="wai_box">
             <div class="nc_box">
-                <div class="nc_box_left">搜索变量库</div>
+                <div class="nc_box_left">平台变量库/变量搜索</div>
                 <div class="nc_box_right btn_box">
-                    <div class="nv_btn_2"  @click="$router.push({path:'/creat_model'})"><strong>+</strong>新建模型</div>
-                    <div class="nv_btn_2"  @click="$router.push({path:'/creat_fun'})"><strong>+</strong>新建变量</div>
+                    <div class="nv_btn_2"  @click="$router.push({path:'/creat_model'})" v-if="is_admin==1"><strong>+</strong>新建模型</div>
+                    <div class="nv_btn_2"  @click="$router.push({path:'/creat_fun'})" v-if="is_admin==1"><strong>+</strong>新建变量</div>
                 </div>
             </div>
             <div class="content_box">
                 <el-row style="padding: 0 40px">
                     <el-col :span="6">
-                        <el-input v-model="input" placeholder="请输入内容"></el-input>
+                        <el-input v-model="input" placeholder="请输入变量名称"></el-input>
                     </el-col>
                     <el-col :span="2" style="margin-left: 20px">
                         <div class="nc_btn" @click="insearch">搜索</div>
@@ -20,37 +20,38 @@
             </div>
             <el-row style="padding: 0 70px"><el-col>搜索结果</el-col></el-row>
             <div class="content_box">
-                <!--<el-row style="padding: 10px 40px"><el-col>共{{tableData.length}}条数据</el-col></el-row>-->
+                <el-row style="padding: 10px 40px"><el-col>共{{tableData.length}}条数据</el-col></el-row>
                 <el-table
                         ref="multipleTable"
                         :data="tableData"
                         tooltip-effect="dark"
                         style="width: 100%"
+                        @sort-change="mysort"
                         @selection-change="handleSelectionChange">
-                    <el-table-column type="expand">
+                    <el-table-column type="expand" align="center">
                         <template slot-scope="props">
                             <el-table :data="props.row.dis" :show-header='false' style="padding: 0" border:false>
-                                <el-table-column label="维度名"prop=""  width="250"></el-table-column>
-                                <el-table-column label="维度名"prop=""  width="300"></el-table-column>
-                                <el-table-column label="维度名"prop="name"  width="250">
+                                <el-table-column label="维度名"prop=""  width="405"></el-table-column>
+                                <!--<el-table-column label="维度名"prop=""  width="180"></el-table-column>-->
+                                <el-table-column label="维度名"prop="name"  width="350" align="left"header-align="center">
                                     <template slot-scope="scope">
-                                        <a :href="baseURL+'#/terrace_fun_item_detailw?id='+scope.row.id" style="cursor: pointer;color: #009E79;"  target="_Blank">{{scope.row.name}}</a>
+                                        <a :href="baseURL+'#/terrace_fun_item_detailw?id='+scope.row.id" style="cursor: pointer;color: #009E79;width: 100%;overflow: hidden;text-overflow:ellipsis;white-space: nowrap;"  target="_Blank">{{scope.row.name}}</a>
                                         <!--<span @click="get_detailw(scope.$index)" style="cursor: pointer;    color: #009E79;">{{scope.row.name}}</span>-->
                                     </template>
                                 </el-table-column>
-                                <el-table-column label="创建时间"prop="create_time"  width="160" align="center"></el-table-column>
+                                <el-table-column label="创建时间"prop="create_time"  width="175" align="center"></el-table-column>
                                 <el-table-column label="操作"><template slot-scope="scope"></template> </el-table-column>
                             </el-table>
                         </template>
                     </el-table-column>
                     <el-table-column
                             type="selection"
-                            width="55">
+                            width="40">
                     </el-table-column>
                     <el-table-column
                             prop="title_type"
                             label="类别"
-                            width="250"
+                            width="100"
                             :filters="[{ text: '单选', value: '单选' }, { text: '多选', value: '多选' },{ text: '量表', value: '量表' }]"
                             :filter-method="filterTag"
                             filter-placement="bottom-end">
@@ -61,28 +62,42 @@
                         </template>
                     </el-table-column>
                     <el-table-column
-                            width="250"
+                            width="350"
                             label="构念名"
+                            align="left"
+                            sortable="custom"
+
                     >
                         <template  slot-scope="scope">
-                            <a :href="baseURL+'#/terrace_fun_item_detail?id='+scope.row.id" style="cursor: pointer;color: #009E79;" target="_Blank">{{scope.row.name}}</a>
+                            <a :href="baseURL+'#/terrace_fun_item_detail?id='+scope.row.id" style="cursor: pointer;color: #009E79;width: 100%;overflow: hidden;text-overflow:ellipsis;white-space: nowrap;" target="_Blank"  >{{scope.row.name}}</a>
                             <!--<span  @click="get_detail(scope.$index)" style="cursor: pointer;color: #009E79;">{{scope.row.name}}</span>-->
                         </template>
                     </el-table-column>
                     <el-table-column
-                            width="250"
-                            label="维度名">
+                            width="350"
+                            label="维度名"
+                            align="left"
+                            >
                         <template slot-scope="scope">
-                            <a :href="baseURL+'#/terrace_fun_item_detailw?id='+scope.row.dis[0].id" style="cursor: pointer;color: #009E79;"  target="_Blank">{{scope.row.dis[0].name+'(共'+scope.row.dis.length+'个维度)'}}</a>
+
+                            <a :href="baseURL+'#/terrace_fun_item_detailw?id='+scope.row.dis_id" style="cursor: pointer;color: #009E79;"  target="_Blank">{{scope.row.dis_name}}</a>
+                            <div><a :href="baseURL+'#/terrace_fun_item_detailw?id='+scope.row.dis_id" style="cursor: pointer;color: #009E79;"  target="_Blank">{{'(共'+scope.row.dis.length+'个维度)'}}</a></div>
+
+
+                            <!--<a :href="baseURL+'#/terrace_fun_item_detailw?id='+scope.row.dis_id" style="cursor: pointer;color: #009E79;width: 100%;overflow: hidden;text-overflow:ellipsis;white-space: nowrap;"  target="_Blank">{{scope.row.dis_name+'(共'+scope.row.dis.length+'个维度)'}}</a>-->
                             <!--<span @click="get_detailw(scope.$index)" style="cursor: pointer;color: #009E79;">{{scope.row.dis[0].name+'(共'+scope.row.dis.length+'个维度)'}}</span>-->
                         </template>
                     </el-table-column>
                     <el-table-column
-                            width="200"
+                            width="120"
                             label="更新时间"
-                            prop="dis[0].create_time">
+                            align="center"
+                            >
+                        <template slot-scope="scope">
+                            <span>{{scope.row.update_time}}</span>
+                        </template>
                     </el-table-column>
-                    <el-table-column label="操作">
+                    <el-table-column label="操作 " align="center">
                         <template slot-scope="scope">
                             <div v-if="is_admin==0">
                                 <span class="dao" @click="imports(scope.$index)" v-if="scope.row.is_add==0">导入我的变量库</span>
@@ -282,7 +297,7 @@
 			                    item.title_type="单选"
 		                    }
 	                    })
-                		self.tableData=res.data.rows
+	                    self.tableData=res.data.rows
                     }
                 })
 	        },
@@ -290,7 +305,6 @@
 	        	var self=this
                 self.$axios.get('terrace_search_get',{key_words:this.$route.query.key_words},(res)=>{
                 	if (res.ret){
-		                console.log(res.data)
 		                self.pages=res.msg/10;
 		                res.data.rows.forEach(function (item) {
 			                if (item.title_type==1){
@@ -302,7 +316,7 @@
 			                }
 		                })
 		                self.tableData=res.data.rows
-                    }
+	                }
                 })
             },
 	        imports(index){
@@ -439,7 +453,7 @@
 			        cancelButtonText: '取消',
 			        type: 'warning'
 		        }).then(() => {
-			        self.$axios.post('delvar',{id:id},(res)=>{
+			        self.$axios.post('delvar',{var_id:id},(res)=>{
 				        if(res.ret){
 					        self.tableData.splice(index,1);
 					        this.$message({
@@ -488,6 +502,43 @@
 				        }
 			        })
 		        }
+            },
+	        mysort(o){
+	        	console.log(o)
+		        var self=this
+                if(o.order==='ascending'){
+	                self.$axios.get('terrace_search_get',{key_words:this.$route.query.key_words,order_type:'asc'},(res)=>{
+		                if (res.ret){
+			                self.pages=res.msg/10;
+			                res.data.rows.forEach(function (item) {
+				                if (item.title_type==1){
+					                item.title_type="量表"
+				                }else if (item.title_type==2){
+					                item.title_type="多选"
+				                }else if (item.title_type==3){
+					                item.title_type="单选"
+				                }
+			                })
+			                self.tableData=res.data.rows
+		                }
+	                })
+                }else if(o.order==='descending'){
+	                self.$axios.get('terrace_search_get',{key_words:this.$route.query.key_words,order_type:'desc'},(res)=>{
+		                if (res.ret){
+			                self.pages=res.msg/10;
+			                res.data.rows.forEach(function (item) {
+				                if (item.title_type==1){
+					                item.title_type="量表"
+				                }else if (item.title_type==2){
+					                item.title_type="多选"
+				                }else if (item.title_type==3){
+					                item.title_type="单选"
+				                }
+			                })
+			                self.tableData=res.data.rows
+		                }
+	                })
+                }
             }
         }
 	}
@@ -584,5 +635,11 @@
     }
     .btn_box>div:nth-child(1){
        margin-right: 20px;
+    }
+    .cell{
+        text-align: center;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space:nowrap;
     }
 </style>

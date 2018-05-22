@@ -64,7 +64,7 @@ export default {
 
     }
     .tags .el-input__inner{
-        width: 190px;
+        width: 320px;
     }
     .nc_btn{
         background-image: linear-gradient(-180deg, #00BF93 4%, #1C9A7E 98%);
@@ -72,6 +72,9 @@ export default {
         text-align: center;
         color: #fff;
         cursor: pointer;
+    }
+    .nc_btn:hover{
+        background-image: linear-gradient(-180deg, #01D9A7 4%, #25B293 98%);
     }
     .nc_select .el-input__inner{
         height: 50px;
@@ -83,6 +86,10 @@ export default {
         color: #009E79;
         text-align: center;
         cursor: pointer;
+    }
+    ..nv_btn_2:hover{
+        color: #ccc;
+        border-color: #00C597;
     }
     .el-dialog{
         width: 30%;
@@ -107,5 +114,23 @@ export default {
     }
     a{
         text-decoration: none;
+    }
+.el-table .cell{
+    padding-left: 20px;
+    padding-right: 20px;
+}
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+}
+input[type="number"]{
+    -moz-appearance: textfield;
+}
+.el-button+.el-button {
+    margin-left: 0px;
+    margin-top: 10px;
+}
+    div{
+        word-break:break-all!important;
     }
 </style>

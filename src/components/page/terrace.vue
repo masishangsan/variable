@@ -12,7 +12,7 @@
             <div class="search_box">
                 <div class="input display" >
                     <span class="iconfont icon-fangdajing"></span>
-                    <input type="text" placeholder="输入您想搜索的变量" v-model="input" style="background-color: #fff">
+                    <input type="text" placeholder="输入您想搜索的内容" v-model="input" style="background-color: #fff">
                 </div>
                 <div class="fun">
                     <el-select v-model="searchValue" placeholder="请选择" class="sar">
@@ -28,7 +28,7 @@
                 </div>
                 <div class="search_btn" @click="search"><div>搜索</div></div>
 
-                <div class="creat_fun"  @click="$router.push({path:'/creat_fun'})"><span>+</span><span>新建变量</span></div>
+                <!--<div class="creat_fun"  @click="$router.push({path:'/creat_fun'})"><span>+</span><span>新建变量</span></div>-->
             </div>
         </div>
     </div>
@@ -245,6 +245,9 @@
         margin-left: 14px;
         cursor: pointer;
     }
+    .search_btn:hover{
+        background-image: linear-gradient(-180deg, #01D9A7 4%, #25B293 98%);
+    }
     .fun{
         width: 120px;
         /*height: 60px;*/
@@ -267,6 +270,10 @@
         color: #009E79;
         letter-spacing: 0;
         cursor: pointer;
+    }
+    .creat_fun:hover{
+        color: #00C597;
+        border-color: #00C597;
     }
     .creat_fun>span:nth-child(1){
         font-weight: 700;
